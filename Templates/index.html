@@ -19,8 +19,32 @@
           crossorigin="anonymous"></script>
  
     <script type="text/javascript">
+
+        function switchBulb (currentState) {
+            if (currentState == true) {
+                // Light is on
+                $("#bulbImg").attr("src","{{ on }}");
+                console.log("The light is now on")
+            } else {
+                $("#bulbImg").attr("src","{{ off }}");
+                console.log("The light is now off")
+            }
+        }
+
         let currentState = "{{ lightOn }}" == "False" ? false : true
+        switchBulb(currentState)
         console.log("As of page load, the \"light on\" state is: " + currentState)
+
+        function getLightState () {
+            let SCRIPT_ROOT = {{ request.script_root|tojson|safe }}
+            $.getJSON(SCRIPT_ROOT + "/_stuff", function(data) {
+                currentState = data.lightOn
+                switchBulb(currentState)
+                console.log(data)
+            });
+        }
+
+        setInterval(getLightState, 500);
 
         $(document).on('submit', '#form', function(e) {
             e.preventDefault();
@@ -30,14 +54,7 @@
                 data: $("#switch").val(),
                 success:function() {
                     currentState = !currentState
-                    if (currentState == true) {
-                        // Light is on
-                        $("#bulbImg").attr("src","{{ on }}");
-                        console.log("The light is now on")
-                    } else {
-                        $("#bulbImg").attr("src","{{ off }}");
-                        console.log("The light is now off")
-                    }
+                    switchBulb(currentState)
                 }
             })
         });
