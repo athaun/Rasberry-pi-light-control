@@ -24,9 +24,11 @@
             if (currentState == true) {
                 // Light is on
                 $("#bulbImg").attr("src","{{ on }}");
+                $("#bulbImg").css("background-color", "white");
                 console.log("The light is now on")
             } else {
                 $("#bulbImg").attr("src","{{ off }}");
+                $("#bulbImg").css("background-color", "rgb(30, 30, 30)");
                 console.log("The light is now off")
             }
         }
